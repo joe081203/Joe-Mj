@@ -1,0 +1,119 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Security Helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Bootstrapped Admin Verification
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'mjjoe1614@gmail.com' ||
+        (request.auth.token.keys().hasAny(['email']) && request.auth.token.email.matches('^mjjoe1614@gmail\\.com$'))
+      );
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Connection test document
+    match /test/{testId} {
+      allow read: if true;
+    }
+
+    // Admin authorization reference collection
+    match /admins/{adminId} {
+      allow read: if isSignedIn();
+      allow write: if false;
+    }
+
+    // User Credentials & Profiles Collection
+    match /users/{userId} {
+      allow get: if isOwner(userId) || isAdmin();
+      allow create: if isOwner(userId)
+                    && incoming().userId == request.auth.uid
+                    && incoming().email is string
+                    && incoming().email.size() <= 256;
+      allow update: if isOwner(userId)
+                    && incoming().userId == existing().userId
+                    && incoming().email == existing().email;
+      allow delete: if false;
+    }
+
+    // LITUS Products Catalog Collection (Publicly browseable e-commerce catalog, admin managed)
+    match /products/{productId} {
+      allow read: if true;
+      allow create: if isAdmin()
+                    && isValidId(productId)
+                    && incoming().name is string
+                    && incoming().name.size() <= 120
+                    && incoming().price is number;
+      allow update: if isAdmin() && isValidId(productId);
+      allow delete: if isAdmin() && isValidId(productId);
+    }
+
+    // Orders Collection: Customer tracking & Admin Income/Fulfillment Dashboard
+    match /orders/{orderId} {
+      // Customers read their own orders; Admin can list and inspect all orders for the revenue dashboard
+      allow list: if (isSignedIn() && resource.data.userId == request.auth.uid) || isAdmin();
+      allow get: if (isSignedIn() && resource.data.userId == request.auth.uid) || isAdmin();
+      
+      // Customer creates order during checkout
+      allow create: if isValidId(orderId)
+                    && incoming().totalAmount is number
+                    && (
+                      (isSignedIn() && incoming().userId == request.auth.uid) ||
+                      incoming().userId == 'guest_collector'
+                    );
+      
+      // Admin can update shipping status, tracking numbers, or payment flags
+      allow update: if isAdmin() && isValidId(orderId);
+      allow delete: if isAdmin() && isValidId(orderId);
+    }
+
+    // Minted NFT Shirts Collection (Public verifiable on-chain digital twins)
+    match /minted_nfts/{mintId} {
+      allow read: if true;
+      allow create: if isSignedIn()
+                    && isValidId(mintId)
+                    && incoming().userId == request.auth.uid
+                    && incoming().name is string
+                    && incoming().name.size() <= 120
+                    && incoming().priceUSD is number
+                    && incoming().txHash is string
+                    && incoming().txHash.size() <= 128;
+      allow update, delete: if false; // Immutable blockchain mint records
+    }
+
+    // Thrift Shop & Reseller Vault Collection (Owner & Admin Managed)
+    match /thrift_listings/{listingId} {
+      allow read: if true;
+      allow create: if isAdmin()
+                    && isValidId(listingId)
+                    && incoming().title is string
+                    && incoming().title.size() <= 140
+                    && incoming().price is number;
+      allow update, delete: if isAdmin() && isValidId(listingId);
+    }
+  }
+}

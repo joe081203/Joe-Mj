@@ -1,0 +1,6 @@
+{
+  "name": "LITUS — Sustainable Luxury Apparel & Digital Assets",
+  "description": "LITUS blends sustainable streetwear craftsmanship with digital asset innovation. Explore high-grade organic garments, thermal-adaptive fabrics, and exclusive Web3 fashion collections.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

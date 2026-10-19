@@ -1,0 +1,329 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User account credentials, role (customer/distributor/admin), and collector profile",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Firebase Auth user UID",
+          "maxLength": 128
+        },
+        "email": {
+          "type": "string",
+          "description": "User email address",
+          "maxLength": 256
+        },
+        "displayName": {
+          "type": "string",
+          "description": "User display name",
+          "maxLength": 120
+        },
+        "role": {
+          "type": "string",
+          "description": "User access level",
+          "enum": ["customer", "distributor", "admin"]
+        },
+        "photoURL": {
+          "type": "string",
+          "description": "User profile photo URL",
+          "maxLength": 1024
+        },
+        "walletAddress": {
+          "type": "string",
+          "description": "Connected Web3 wallet address",
+          "maxLength": 128
+        },
+        "bio": {
+          "type": "string",
+          "description": "Collector bio or tagline",
+          "maxLength": 300
+        },
+        "shippingAddress": {
+          "type": "string",
+          "description": "Shipping address for physical garment delivery",
+          "maxLength": 500
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp of profile creation"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp of profile update"
+        }
+      },
+      "required": ["userId", "email"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Physical couture and technical sustainable garment managed by owner admin",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique product identifier",
+          "maxLength": 64
+        },
+        "name": {
+          "type": "string",
+          "description": "Product display name",
+          "maxLength": 120
+        },
+        "category": {
+          "type": "string",
+          "description": "Garment category",
+          "enum": ["shirts", "tees", "trousers", "accessories"]
+        },
+        "price": {
+          "type": "number",
+          "description": "Retail price in USD"
+        },
+        "originalPrice": {
+          "type": "number",
+          "description": "Original retail price in USD if discounted"
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of garment",
+          "maxLength": 2000
+        },
+        "fabric": {
+          "type": "string",
+          "description": "Material and composition specs",
+          "maxLength": 300
+        },
+        "sustainabilityNote": {
+          "type": "string",
+          "description": "Eco/sustainability footprint details",
+          "maxLength": 500
+        },
+        "image": {
+          "type": "string",
+          "description": "Firebase Storage or CDN image URL",
+          "maxLength": 2048
+        },
+        "stockQuantity": {
+          "type": "number",
+          "description": "Current inventory stock count"
+        },
+        "isPublished": {
+          "type": "boolean",
+          "description": "Publishing status; whether visible to customers"
+        },
+        "distributorOnly": {
+          "type": "boolean",
+          "description": "Exclusive to distributor role"
+        },
+        "distributorPrice": {
+          "type": "number",
+          "description": "Special wholesale price for distributors"
+        },
+        "isRecommended": {
+          "type": "boolean",
+          "description": "Featured in curated collection"
+        },
+        "isNFTReady": {
+          "type": "boolean",
+          "description": "Has paired Web3 digital twin"
+        },
+        "badge": {
+          "type": "string",
+          "description": "Highlight badge e.g. SS26 or Bespoke",
+          "maxLength": 64
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp"
+        },
+        "createdBy": {
+          "type": "string",
+          "description": "Admin email who created the product",
+          "maxLength": 256
+        }
+      },
+      "required": ["id", "name", "category", "price", "description", "image"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Customer order record with items, real-time shipping tracking, and payment details (Razorpay / COD / GPay UPI)",
+      "type": "object",
+      "properties": {
+        "orderId": {
+          "type": "string",
+          "description": "Unique order ID",
+          "maxLength": 128
+        },
+        "userId": {
+          "type": "string",
+          "description": "Customer Firebase Auth UID",
+          "maxLength": 128
+        },
+        "customerName": {
+          "type": "string",
+          "description": "Customer full name",
+          "maxLength": 120
+        },
+        "customerEmail": {
+          "type": "string",
+          "description": "Customer email for receipt & confirmation",
+          "maxLength": 256
+        },
+        "totalAmount": {
+          "type": "number",
+          "description": "Final order total in USD"
+        },
+        "subtotal": {
+          "type": "number",
+          "description": "Cart items subtotal in USD"
+        },
+        "shippingFee": {
+          "type": "number",
+          "description": "Shipping cost in USD"
+        },
+        "paymentMethod": {
+          "type": "string",
+          "description": "Payment method chosen (Razorpay, COD, or GPay UPI)",
+          "enum": ["razorpay", "cod", "gpay_upi"]
+        },
+        "paymentStatus": {
+          "type": "string",
+          "description": "Payment authorization status",
+          "enum": ["paid", "pending", "refunded"]
+        },
+        "paymentReference": {
+          "type": "string",
+          "description": "Transaction ID or COD reference",
+          "maxLength": 128
+        },
+        "shippingStatus": {
+          "type": "string",
+          "description": "Real-time fulfillment tracking stage",
+          "enum": ["processing", "tailored", "in_transit", "delivered"]
+        },
+        "trackingNumber": {
+          "type": "string",
+          "description": "Carrier tracking number",
+          "maxLength": 64
+        },
+        "carrier": {
+          "type": "string",
+          "description": "Logistics carrier name",
+          "maxLength": 64
+        },
+        "estimatedDelivery": {
+          "type": "string",
+          "description": "Estimated delivery date description"
+        },
+        "shippingAddress": {
+          "type": "string",
+          "description": "Customer destination delivery address",
+          "maxLength": 500
+        },
+        "customerPhone": {
+          "type": "string",
+          "description": "Customer phone number or WhatsApp for COD order verification and dispatch",
+          "maxLength": 32
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Order placement timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Order update timestamp"
+        }
+      },
+      "required": ["orderId", "userId", "customerEmail", "totalAmount", "paymentMethod", "paymentStatus", "shippingStatus"]
+    },
+    "MintedNFTShirt": {
+      "title": "MintedNFTShirt",
+      "description": "NFT shirt collectible minted or claimed by an authenticated user",
+      "type": "object",
+      "properties": {
+        "mintId": {
+          "type": "string",
+          "description": "Unique mint transaction ID",
+          "maxLength": 128
+        },
+        "userId": {
+          "type": "string",
+          "description": "Owner Firebase Auth UID",
+          "maxLength": 128
+        },
+        "userEmail": {
+          "type": "string",
+          "description": "Collector user email",
+          "maxLength": 256
+        },
+        "nftShirtId": {
+          "type": "string",
+          "description": "ID of the NFT shirt model",
+          "maxLength": 64
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the NFT shirt",
+          "maxLength": 120
+        },
+        "tokenStandard": {
+          "type": "string",
+          "description": "Token standard (e.g. ERC-721)",
+          "maxLength": 32
+        },
+        "tokenId": {
+          "type": "string",
+          "description": "Token on-chain index",
+          "maxLength": 32
+        },
+        "priceSOL": {
+          "type": "number",
+          "description": "Price in SOL"
+        },
+        "priceUSD": {
+          "type": "number",
+          "description": "Price in USD"
+        },
+        "mintedAt": {
+          "type": "string",
+          "description": "Server timestamp of mint"
+        },
+        "txHash": {
+          "type": "string",
+          "description": "Cryptographic blockchain transaction hash",
+          "maxLength": 128
+        },
+        "paymentGateway": {
+          "type": "string",
+          "description": "Payment gateway used (e.g. Razorpay or Web3)",
+          "maxLength": 64
+        },
+        "razorpayPaymentId": {
+          "type": "string",
+          "description": "Razorpay payment receipt ID",
+          "maxLength": 128
+        }
+      },
+      "required": ["mintId", "userId", "nftShirtId", "name", "priceUSD", "txHash"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User credentials, role (customer/distributor/admin), and collector account details"
+    },
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Catalog of physical luxury products created and managed by admin"
+    },
+    "/orders/{orderId}": {
+      "schema": "Order",
+      "description": "Customer purchase orders with real-time shipping status and payment details"
+    },
+    "/minted_nfts/{mintId}": {
+      "schema": "MintedNFTShirt",
+      "description": "Authenticated user minted NFT shirts catalog"
+    }
+  }
+}

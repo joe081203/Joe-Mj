@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-display: 'Outfit', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  html {
+    color-scheme: dark;
+    background-color: #070b14;
+    color: #f8fafc;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: #070b14;
+    color: #f8fafc;
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display);
+  }
+
+  code, .font-mono {
+    font-family: var(--font-mono);
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Electric blue glow */
+.electric-glow {
+  box-shadow: 0 0 25px -4px rgba(56, 189, 248, 0.4), 0 0 10px -2px rgba(0, 240, 255, 0.25);
+}
+
+.electric-text-glow {
+  text-shadow: 0 0 20px rgba(56, 189, 248, 0.5), 0 0 40px rgba(0, 240, 255, 0.3);
+}
+
+.electric-border-glow {
+  border-color: rgba(56, 189, 248, 0.6);
+  box-shadow: 0 0 15px -3px rgba(56, 189, 248, 0.3);
+}
+
+/* Hide scrollbars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Wave animation keyframes */
+@keyframes waveFlow {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-25%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes waveFlowSlow {
+  0% {
+    transform: translateX(0) scaleY(1);
+  }
+  50% {
+    transform: translateX(-15%) scaleY(1.15);
+  }
+  100% {
+    transform: translateX(0) scaleY(1);
+  }
+}
+
+.animate-wave-flow {
+  animation: waveFlow 18s ease-in-out infinite;
+}
+
+.animate-wave-flow-reverse {
+  animation: waveFlow 14s ease-in-out infinite reverse;
+}
+
+.animate-wave-slow {
+  animation: waveFlowSlow 24s ease-in-out infinite;
+}
