@@ -190,6 +190,7 @@ function AppContent() {
         openThriftShop={() => setIsThriftShopOpen(true)}
         scrollToSection={scrollToSection}
         onOpenAdminManager={() => setIsAdminManagerOpen(true)}
+        onViewCombos={handleViewCombos}
       />
 
       <main>

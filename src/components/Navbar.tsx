@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { LitusLogo } from './LitusLogo';
+import { OffersMarquee } from './OffersMarquee';
 import { useAuth } from '../context/AuthContext';
 import { 
   Menu, 
@@ -28,6 +29,7 @@ interface NavbarProps {
   openThriftShop: () => void;
   scrollToSection: (id: string) => void;
   onOpenAdminManager?: () => void;
+  onViewCombos?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -41,6 +43,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   openThriftShop,
   scrollToSection,
   onOpenAdminManager,
+  onViewCombos,
 }) => {
   const { user, signIn, signOut, isAdmin } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -64,11 +67,18 @@ export const Navbar: React.FC<NavbarProps> = ({
       <header
         className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
           isScrolled
-            ? 'bg-white/90 dark:bg-[#070b12]/90 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800/80 shadow-xs'
-            : 'bg-gradient-to-b from-black/60 via-black/25 to-transparent text-white'
+            ? 'bg-white/95 dark:bg-[#070b12]/95 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800/80 shadow-xs'
+            : 'bg-gradient-to-b from-black/80 via-black/40 to-transparent text-white'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-8">
+        {/* Continuous Offers Marquee at the Top of Navbar */}
+        <OffersMarquee
+          onViewCombos={onViewCombos}
+          onOpenThriftShop={openThriftShop}
+          onShopClick={() => handleNavClick('products')}
+        />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 sm:h-20 flex items-center justify-between gap-8">
           
           {/* Zone 1: Brand Wordmark & Logo */}
           <a
@@ -127,7 +137,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Multi-Brand Thrift Shop & Reseller Navbar Button */}
             <button
               onClick={openThriftShop}
-              title="Multi-Brand Thrift Shop - Buy & Sell Thrifted Items Across All Brands (Carhartt, Nike, Levi's, etc.)"
+              title={isAdmin ? "Multi-Brand Thrift Shop - Admin Reseller & Vault" : "Multi-Brand Thrift Shop - Curated Multi-Brand Pre-Loved Archive"}
               className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs font-mono tracking-wider uppercase rounded-md border transition-all cursor-pointer ${
                 isScrolled
                   ? 'border-amber-500 bg-amber-50/80 text-amber-800 dark:border-amber-400 dark:bg-amber-950/40 dark:text-amber-300 hover:bg-amber-400 hover:text-slate-950 dark:hover:bg-amber-400 dark:hover:text-slate-950'
@@ -136,7 +146,9 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <Tag className="w-3.5 h-3.5 text-amber-400" />
               <span className="font-bold">Thrift Shop</span>
-              <span className="text-[9px] font-mono px-1 rounded bg-amber-400/20 text-amber-300">Multi-Brand</span>
+              <span className="text-[9px] font-mono px-1 rounded bg-amber-400/20 text-amber-300">
+                {isAdmin ? 'Admin Resell' : 'Curated'}
+              </span>
             </button>
 
             <button
@@ -380,7 +392,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <Tag className="w-4 h-4 text-amber-400" />
                     <span className="font-semibold">Thrift Shop (Multi-Brand)</span>
                   </div>
-                  <span className="text-xs font-mono uppercase bg-amber-400 text-slate-950 px-2 py-0.5 rounded font-bold">Sell & Buy</span>
+                  <span className="text-xs font-mono uppercase bg-amber-400 text-slate-950 px-2 py-0.5 rounded font-bold">
+                    {isAdmin ? 'Admin Resell' : 'Browse Vault'}
+                  </span>
                 </button>
 
                 <button

@@ -523,23 +523,38 @@ export const ThriftShopModal: React.FC<ThriftShopModalProps> = ({
               <span>Browse Multi-Brand Thrift ({filteredItems.length})</span>
             </button>
 
-            <button
-              onClick={() => {
-                setActiveTab('sell');
-                setSubmissionSuccessId(null);
-              }}
-              className={`pb-3 px-4 transition-all cursor-pointer flex items-center gap-2 border-b-2 font-bold ${
-                activeTab === 'sell'
-                  ? 'border-emerald-400 text-emerald-400'
-                  : 'border-transparent text-slate-400 hover:text-white'
-              }`}
-            >
-              <PlusCircle className="w-4 h-4 text-emerald-400" />
-              <span>Sell Thrifted Items (Any Brand)</span>
-              <span className="px-1.5 py-0.2 rounded text-[9px] bg-emerald-500/20 text-emerald-300 font-bold">
-                List & Earn
-              </span>
-            </button>
+            {isAdmin ? (
+              <button
+                onClick={() => {
+                  setActiveTab('sell');
+                  setSubmissionSuccessId(null);
+                }}
+                className={`pb-3 px-4 transition-all cursor-pointer flex items-center gap-2 border-b-2 font-bold ${
+                  activeTab === 'sell'
+                    ? 'border-emerald-400 text-emerald-400'
+                    : 'border-transparent text-slate-400 hover:text-white'
+                }`}
+              >
+                <PlusCircle className="w-4 h-4 text-emerald-400" />
+                <span>Sell Thrifted Items (Admin)</span>
+                <span className="px-1.5 py-0.2 rounded text-[9px] bg-emerald-500/20 text-emerald-300 font-bold">
+                  Admin Active
+                </span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                disabled
+                title="Selling on the Thrift Shop is disabled for customer accounts. Only the store admin can sell and list thrifted items."
+                className="pb-3 px-4 flex items-center gap-2 border-b-2 border-transparent text-slate-500 cursor-not-allowed font-medium select-none"
+              >
+                <Lock className="w-3.5 h-3.5 text-slate-500" />
+                <span>Sell on Thrift (Admin Only)</span>
+                <span className="px-1.5 py-0.2 rounded text-[9px] bg-slate-800 text-slate-400 font-bold border border-slate-700/60">
+                  Disabled
+                </span>
+              </button>
+            )}
           </div>
 
           <span className="hidden sm:inline text-[11px] font-mono text-slate-400">
@@ -562,13 +577,31 @@ export const ThriftShopModal: React.FC<ThriftShopModalProps> = ({
                     <strong className="text-white">Curated Multi-Brand Thrift Archive:</strong> 100% authentic second-hand streetwear, vintage outerwear, selvedge denim, and deadstock classics from Carhartt, Nike, Stüssy, Levi's, and independent thrift resellers.
                   </p>
                 </div>
-                <button
-                  onClick={() => setActiveTab('sell')}
-                  className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs tracking-wide transition-all cursor-pointer shrink-0 shadow-md flex items-center gap-1.5"
-                >
-                  <span>Sell on Thrift Shop</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
+                {isAdmin ? (
+                  <button
+                    onClick={() => setActiveTab('sell')}
+                    className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs tracking-wide transition-all cursor-pointer shrink-0 shadow-md flex items-center gap-1.5"
+                  >
+                    <PlusCircle className="w-3.5 h-3.5" />
+                    <span>+ List Thrift Item (Admin)</span>
+                  </button>
+                ) : (
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 text-xs font-mono flex items-center gap-1.5">
+                      <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
+                      <span>Admin-Curated Vault</span>
+                    </span>
+                    <button
+                      type="button"
+                      disabled
+                      title="Selling on the thrift shop is reserved strictly for the shop admin. Customer selling is disabled."
+                      className="px-3 py-1.5 rounded-xl bg-slate-900/60 border border-slate-800/80 text-slate-500 text-xs font-mono cursor-not-allowed flex items-center gap-1.5 select-none"
+                    >
+                      <Lock className="w-3 h-3 text-slate-600" />
+                      <span>Sell Disabled (Admin Only)</span>
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* Brand Filter Pills & Search */}
@@ -733,26 +766,39 @@ export const ThriftShopModal: React.FC<ThriftShopModalProps> = ({
                               </span>
                             </div>
 
-                            <button
-                              onClick={(e) => handleBuyThriftItem(item, e)}
-                              className={`px-3 py-1.5 rounded-xl text-xs font-mono font-medium transition-all duration-200 cursor-pointer flex items-center gap-1.5 ${
-                                isAdded
-                                  ? 'bg-emerald-600 text-white'
-                                  : 'bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold shadow-md'
-                              }`}
-                            >
-                              {isAdded ? (
-                                <>
-                                  <Check className="w-3.5 h-3.5" />
-                                  <span>In Bag</span>
-                                </>
-                              ) : (
-                                <>
-                                  <ShoppingBag className="w-3.5 h-3.5" />
-                                  <span>Buy Thrift</span>
-                                </>
+                            <div className="flex items-center gap-1.5">
+                              {isAdmin && (
+                                <button
+                                  type="button"
+                                  onClick={(e) => handleDeleteThriftItem(item.id, e)}
+                                  title="Admin: Delete this thrift listing"
+                                  className="p-1.5 rounded-xl bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-rose-500/30 transition-colors cursor-pointer"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
                               )}
-                            </button>
+
+                              <button
+                                onClick={(e) => handleBuyThriftItem(item, e)}
+                                className={`px-3 py-1.5 rounded-xl text-xs font-mono font-medium transition-all duration-200 cursor-pointer flex items-center gap-1.5 ${
+                                  isAdded
+                                    ? 'bg-emerald-600 text-white'
+                                    : 'bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold shadow-md'
+                                }`}
+                              >
+                                {isAdded ? (
+                                  <>
+                                    <Check className="w-3.5 h-3.5" />
+                                    <span>In Bag</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <ShoppingBag className="w-3.5 h-3.5" />
+                                    <span>Buy Thrift</span>
+                                  </>
+                                )}
+                              </button>
+                            </div>
                           </div>
 
                         </div>
@@ -765,9 +811,10 @@ export const ThriftShopModal: React.FC<ThriftShopModalProps> = ({
             </div>
           )}
 
-          {/* TAB 2: SELL ON THRIFT SHOP (ANY BRAND) */}
+          {/* TAB 2: SELL ON THRIFT SHOP (ADMIN ONLY) */}
           {activeTab === 'sell' && (
-            <div className="max-w-3xl mx-auto space-y-6">
+            isAdmin ? (
+              <div className="max-w-3xl mx-auto space-y-6">
               
               {/* Success Banner */}
               {submissionSuccessId && (
@@ -1107,6 +1154,25 @@ export const ThriftShopModal: React.FC<ThriftShopModalProps> = ({
               </form>
 
             </div>
+            ) : (
+              <div className="max-w-md mx-auto py-16 px-6 text-center space-y-4 bg-[#0a101e] border border-slate-800 rounded-3xl shadow-2xl animate-fadeIn">
+                <div className="w-14 h-14 rounded-2xl bg-amber-500/15 text-amber-400 border border-amber-500/30 flex items-center justify-center mx-auto shadow-lg">
+                  <Lock className="w-7 h-7 text-amber-400" />
+                </div>
+                <h3 className="text-lg font-bold text-white">Sell on Thrift is Disabled for Customers</h3>
+                <p className="text-xs text-slate-400 leading-relaxed font-light">
+                  Listing and selling thrifted garments is exclusively reserved for the store administrator and authorized curator. Customers can explore, view provenance, and purchase any of the authentic curated vintage pieces available in the vault.
+                </p>
+                <div className="pt-2">
+                  <button
+                    onClick={() => setActiveTab('browse')}
+                    className="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs cursor-pointer transition-colors shadow-md"
+                  >
+                    Browse Available Thrift Items
+                  </button>
+                </div>
+              </div>
+            )
           )}
 
         </div>

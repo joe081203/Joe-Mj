@@ -5,13 +5,7 @@ import {
   ArrowRight, 
   ShoppingBag, 
   Eye, 
-  Tag, 
-  Flame, 
-  Percent, 
-  ShieldCheck, 
-  RefreshCw, 
   Check,
-  Zap,
   Layers
 } from 'lucide-react';
 
@@ -28,17 +22,10 @@ export const HeroNewReleases: React.FC<HeroNewReleasesProps> = ({
   onAddToCart,
   onViewCombos,
 }) => {
-  const [copiedCode, setCopiedCode] = useState(false);
   const [addedId, setAddedId] = useState<string | null>(null);
 
   // Filter products marked as new releases or combos
   const newReleases = products.filter(p => p.isNewRelease || p.category === 'combos').slice(0, 4);
-
-  const handleCopyCode = (code: string) => {
-    navigator.clipboard.writeText(code);
-    setCopiedCode(true);
-    setTimeout(() => setCopiedCode(false), 2000);
-  };
 
   const handleQuickAdd = (product: Product, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -49,79 +36,7 @@ export const HeroNewReleases: React.FC<HeroNewReleasesProps> = ({
   };
 
   return (
-    <div className="relative z-20 -mt-10 sm:-mt-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      {/* Dynamic Offers & Atelier Perks Strip */}
-      <div className="bg-[#0b1120]/95 backdrop-blur-xl border border-slate-800/90 rounded-2xl shadow-2xl p-4 sm:p-6 mb-12">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-slate-800/80">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400/20 to-blue-600/30 border border-sky-400/30 flex items-center justify-center text-sky-400 shrink-0 shadow-lg">
-              <Zap className="w-5 h-5 text-sky-400" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-sky-400 font-bold">
-                  Exclusive Atelier Perks // SS26
-                </span>
-                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-sky-500/10 text-sky-400 border border-sky-400/20">
-                  Active
-                </span>
-              </div>
-              <h3 className="text-base sm:text-lg font-bold text-white tracking-tight mt-0.5">
-                Curated Combo Savings & Lotus Launch Privilege
-              </h3>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3">
-            {/* Promo Code Box */}
-            <div 
-              onClick={() => handleCopyCode('LOTUS20')}
-              className="group flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700/80 hover:border-sky-400/50 cursor-pointer transition-all"
-              title="Click to copy voucher code"
-            >
-              <Tag className="w-3.5 h-3.5 text-sky-400" />
-              <div className="text-left font-mono">
-                <span className="text-[9px] text-slate-400 block leading-none">Code: $20 OFF &gt; $150</span>
-                <span className="text-xs font-bold text-white group-hover:text-sky-300">LOTUS20</span>
-              </div>
-              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 ml-1">
-                {copiedCode ? 'Copied!' : 'Copy'}
-              </span>
-            </div>
-
-            <button
-              onClick={onViewCombos}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-slate-950 font-bold text-xs tracking-wide transition-all shadow-lg hover:shadow-sky-500/20 cursor-pointer"
-            >
-              <Layers className="w-3.5 h-3.5 text-slate-950" />
-              <span>Explore Combos (Save up to $85)</span>
-              <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
-            </button>
-          </div>
-        </div>
-
-        {/* 3 Value Pillars */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 text-xs">
-          <div className="flex items-center gap-3 p-2 rounded-lg bg-slate-900/40">
-            <Percent className="w-4 h-4 text-sky-400 shrink-0" />
-            <p className="text-slate-300">
-              <span className="font-semibold text-white">Bundle Privilege:</span> Up to 20% discount baked into head-to-toe combo sets.
-            </p>
-          </div>
-          <div className="flex items-center gap-3 p-2 rounded-lg bg-slate-900/40">
-            <Sparkles className="w-4 h-4 text-sky-400 shrink-0" />
-            <p className="text-slate-300">
-              <span className="font-semibold text-white">Web3 Digital Twin:</span> Free encrypted Polygon collectible with core releases.
-            </p>
-          </div>
-          <div className="flex items-center gap-3 p-2 rounded-lg bg-slate-900/40">
-            <RefreshCw className="w-4 h-4 text-sky-400 shrink-0" />
-            <p className="text-slate-300">
-              <span className="font-semibold text-white">Circular Take-Back:</span> 30% lifetime credit upon return for zero-waste recycling.
-            </p>
-          </div>
-        </div>
-      </div>
+    <div className="relative z-20 pt-10 sm:pt-16 pb-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
       {/* NEW RELEASES SPOTLIGHT */}
       <div className="mb-14">

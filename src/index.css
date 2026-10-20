@@ -93,3 +93,25 @@ html {
 .animate-wave-slow {
   animation: waveFlowSlow 24s ease-in-out infinite;
 }
+
+/* Offers Marquee Continuous Scroll */
+@keyframes marqueeScroll {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee-scroll {
+  display: flex;
+  width: max-content;
+  animation: marqueeScroll 36s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-scroll:hover {
+  animation-play-state: paused;
+}
+
